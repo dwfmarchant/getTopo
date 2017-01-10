@@ -7,6 +7,7 @@ import zipfile
 import urllib
 import sys
 import numpy as np
+import pyproj
 
 URL = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL1.003/2000.02.11/'
 
@@ -102,3 +103,26 @@ def downloadSRTM_LL(lat_min, lat_max, lon_min, lon_max):
     hgt_trim = hgt[lat_ind0:lat_ind1+1, lon_ind0:lon_ind1+1]
 
     return x_ll_trim, y_ll_trim, hgt_trim
+
+def downloadSRTM_UTM(x_min, x_max, y_min, y_max, utm_zone, utm_datum='WGS84', south=False):
+
+    proj_latlong = pyproj.Proj(proj='latlong', datum='WGS84')
+    proj_utm = pyproj.Proj(proj="utm", zone=utm_zone, datum=utm_datum, south=south)
+
+    utm_box = np.c_[[x_min, x_min, x_max, x_max, x_min],
+                    [y_min, y_max, y_max, y_min, y_min]]
+
+    box_lon, box_lat = pyproj.transform(proj_utm, proj_latlong, utm_box[:, 0], utm_box[:, 1])
+
+    lon_min = np.min(box_lon)
+    lon_max = np.max(box_lon)
+    lat_min = np.min(box_lat)
+    lat_max = np.max(box_lat)
+
+    x_ll, y_ll, hgt = downloadSRTM_LL(lat_min, lat_max, lon_min, lon_max)
+    x_ll, y_ll = np.meshgrid(x_ll, y_ll)
+
+    x_utm, y_utm = pyproj.transform(proj_latlong, proj_utm, x_ll, y_ll)
+
+    return x_utm, y_utm, hgt
+
