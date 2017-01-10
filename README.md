@@ -1,2 +1,2 @@
 # getTopo
-Python tool for download SRTM topography data
+Python tool for downloading SRTM topography data
