@@ -6,6 +6,7 @@ import io
 import zipfile
 import urllib
 import sys
+import numpy as np
 
 URL = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL1.003/2000.02.11/'
 
@@ -59,4 +60,8 @@ def downloadSRTMtile(lat, lon):
     hgt_string = zip_file.read(zip_file_name)
     zip_file.close()
 
-    return hgt_string
+    srtm = np.fromstring(string=hgt_string, dtype='int16').byteswap()
+    srtm.shape = (3601, 3601)
+    srtm = np.flipud(srtm)
+
+    return srtm
