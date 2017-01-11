@@ -104,13 +104,13 @@ def downloadSRTM_LL(lat_min, lat_max, lon_min, lon_max):
 
     return x_ll_trim, y_ll_trim, hgt_trim
 
-def downloadSRTM_UTM(x_min, x_max, y_min, y_max, utm_zone, utm_datum='WGS84', south=False):
+def downloadSRTM_UTM(xmin, xmax, ymin, ymax, utm_zone, utm_datum='WGS84', south=False):
 
     proj_latlong = pyproj.Proj(proj='latlong', datum='WGS84')
     proj_utm = pyproj.Proj(proj="utm", zone=utm_zone, datum=utm_datum, south=south)
 
-    utm_box = np.c_[[x_min, x_min, x_max, x_max, x_min],
-                    [y_min, y_max, y_max, y_min, y_min]]
+    utm_box = np.c_[[xmin, xmin, xmax, xmax, xmin],
+                    [ymin, ymax, ymax, ymin, ymin]]
 
     box_lon, box_lat = pyproj.transform(proj_utm, proj_latlong, utm_box[:, 0], utm_box[:, 1])
 
