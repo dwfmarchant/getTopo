@@ -126,3 +126,25 @@ def downloadSRTM_UTM(xmin, xmax, ymin, ymax, utm_zone, utm_datum='WGS84', south=
 
     return x_utm, y_utm, hgt
 
+def downloadSRTM_proj4(xmin, xmax, ymin, ymax, proj4_string):
+
+    proj_latlong = pyproj.Proj(proj='latlong', datum='WGS84')
+    proj_p4 = pyproj.Proj(proj4_string)
+
+    p4_box = np.c_[[xmin, xmin, xmax, xmax, xmin],
+                   [ymin, ymax, ymax, ymin, ymin]]
+
+    box_lon, box_lat = pyproj.transform(proj_p4, proj_latlong, p4_box[:, 0], p4_box[:, 1])
+
+    lon_min = np.min(box_lon)
+    lon_max = np.max(box_lon)
+    lat_min = np.min(box_lat)
+    lat_max = np.max(box_lat)
+
+    x_ll, y_ll, hgt = downloadSRTM_LL(lat_min, lat_max, lon_min, lon_max)
+    x_ll, y_ll = np.meshgrid(x_ll, y_ll)
+
+    x_p4, y_p4 = pyproj.transform(proj_latlong, proj_p4, x_ll, y_ll)
+
+    return x_p4, y_p4, hgt
+
