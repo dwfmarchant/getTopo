@@ -6,7 +6,7 @@ def getOptions():
     opts = json.load(open(expanduser('~/.gettoporc'), 'r'))
     return opts
 
-def getFname(lat, lon):
+def getHgtZipFname(lat, lon):
     
     if lat < 0: 
         fname = 'S'

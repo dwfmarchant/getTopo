@@ -6,13 +6,12 @@ import io
 import zipfile
 import numpy as np
 
-from .utils import getFname, getOptions
+from .utils import getHgtZipFname, getOptions
 
 URL = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL1.003/2000.02.11/'
 
-def downloadSRTMtile(lat, lon):
+def downloadSRTMtile(fname):
 
-    fname = getFname(lat, lon)
     opts = getOptions()
 
     password_manager = urllib.request.HTTPPasswordMgrWithDefaultRealm()
@@ -26,7 +25,6 @@ def downloadSRTMtile(lat, lon):
         urllib.request.HTTPCookieProcessor(cookie_jar))
     urllib.request.install_opener(opener)
 
-    print('\tDownloading {}....'.format(fname), end="", flush=True)
     request = urllib.request.Request(URL+fname)
     response = urllib.request.urlopen(request)    
     dat = response.read()
@@ -39,9 +37,29 @@ def downloadSRTMtile(lat, lon):
 
     return dat
 
-def readHgtZip(body):
+def getSRTM(lat, lon):
 
-    zip_file = zipfile.ZipFile(io.BytesIO(body), 'r')
+    fname = getHgtZipFname(lat, lon)
+    opts = getOptions()
+
+    download = False
+    if 'download_location' in opts.keys():
+        # Check if file is already downloaded
+        dl_fname = os.path.join(opts['download_location'], fname)
+        if os.path.exists(dl_fname):
+            print('\tReading {}....'.format(fname), end="", flush=True)
+            with open(dl_fname, 'rb') as hgtzip_file:
+                dat = hgtzip_file.read()
+        else:
+            download = True
+    else:
+        download = True
+
+    if download:
+        print('\tDownloading {}....'.format(fname), end="", flush=True)
+        dat = downloadSRTMtile(fname)
+
+    zip_file = zipfile.ZipFile(io.BytesIO(dat), 'r')
 
     zip_file_name = zip_file.namelist()[0]
     hgt_string = zip_file.read(zip_file_name)
