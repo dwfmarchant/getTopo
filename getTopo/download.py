@@ -3,7 +3,7 @@ import os
 import urllib
 from http.cookiejar import CookieJar
 import io
-import zipfile
+from zipfile import ZipFile
 import numpy as np
 
 from .utils import getHgtZipFname, getOptions
@@ -59,7 +59,13 @@ def getSRTM(lat, lon):
         print('\tDownloading {}....'.format(fname), end="", flush=True)
         dat = downloadSRTMtile(fname)
 
-    zip_file = zipfile.ZipFile(io.BytesIO(dat), 'r')
+    srtm = parseHgtZip(dat)
+    print('Done', flush=True)
+    return srtm
+
+def parseHgtZip(dat):
+
+    zip_file = ZipFile(io.BytesIO(dat), 'r')
 
     zip_file_name = zip_file.namelist()[0]
     hgt_string = zip_file.read(zip_file_name)
