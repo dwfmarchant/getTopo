@@ -2,9 +2,9 @@
 import json
 from os.path import expanduser
 
-def getCredentials():
-    creds = json.load(open(expanduser('~/.gettoporc'), 'r'))
-    return creds
+def getOptions():
+    opts = json.load(open(expanduser('~/.gettoporc'), 'r'))
+    return opts
 
 def getFname(lat, lon):
     

@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pyproj
 
-from .download import downloadSRTMtile
+from .download import downloadSRTMtile, readHgtZip
 
 def downloadSRTM_LL(lat_min, lat_max, lon_min, lon_max):
 
@@ -15,7 +15,8 @@ def downloadSRTM_LL(lat_min, lat_max, lon_min, lon_max):
     print('Need {} tiles...'.format(tiles_lon.size))
     sys.stdout.flush()
     for lon, lat in zip(tiles_lon.flat, tiles_lat.flat):
-        hgt_dict[(lon, lat)] = downloadSRTMtile(lat, lon)
+        body = downloadSRTMtile(lat, lon)
+        hgt_dict[(lon, lat)] = readHgtZip(body)
 
     hgt = np.ndarray((0, lons.size*3600+1))
     for ilat in lats:
