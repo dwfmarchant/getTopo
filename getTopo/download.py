@@ -8,7 +8,7 @@ import numpy as np
 
 from .utils import getHgtZipFname, getOptions
 
-URL = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL1.003/2000.02.11/'
+URL = 'https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/'
 
 def downloadSRTMtile(fname):
 
@@ -31,6 +31,7 @@ def downloadSRTMtile(fname):
 
     if 'download_location' in opts.keys():
         out_fname = os.path.join(opts['download_location'], fname)
+        out_fname = os.path.expanduser(out_fname)
         with open(out_fname, 'wb') as hgtzip_file:
             hgtzip_file.write(dat)
     print('Done', flush=True)        
@@ -46,6 +47,7 @@ def getSRTM(lat, lon):
     if 'download_location' in opts.keys():
         # Check if file is already downloaded
         dl_fname = os.path.join(opts['download_location'], fname)
+        dl_fname = os.path.expanduser(dl_fname)
         if os.path.exists(dl_fname):
             print('\tReading {}....'.format(fname), end="", flush=True)
             with open(dl_fname, 'rb') as hgtzip_file:
