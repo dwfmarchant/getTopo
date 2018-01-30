@@ -15,9 +15,9 @@ def downloadSRTMtile(fname):
     opts = getOptions()
 
     password_manager = urllib.request.HTTPPasswordMgrWithDefaultRealm()
-    password_manager.add_password(None, 
-                                  "https://urs.earthdata.nasa.gov", 
-                                  opts['username'], 
+    password_manager.add_password(None,
+                                  "https://urs.earthdata.nasa.gov",
+                                  opts['username'],
                                   opts['password'])
     cookie_jar = CookieJar()
     opener = urllib.request.build_opener(
@@ -26,7 +26,7 @@ def downloadSRTMtile(fname):
     urllib.request.install_opener(opener)
 
     request = urllib.request.Request(URL+fname)
-    response = urllib.request.urlopen(request)    
+    response = urllib.request.urlopen(request)
     dat = response.read()
 
     if 'download_location' in opts.keys():
@@ -34,7 +34,7 @@ def downloadSRTMtile(fname):
         out_fname = os.path.expanduser(out_fname)
         with open(out_fname, 'wb') as hgtzip_file:
             hgtzip_file.write(dat)
-    print('Done', flush=True)        
+    print('Done', flush=True)
 
     return dat
 
@@ -78,4 +78,3 @@ def parseHgtZip(dat):
     srtm = np.flipud(srtm)
 
     return srtm
-
