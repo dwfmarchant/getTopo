@@ -18,7 +18,7 @@ setuptools.setup(
     install_requires=[
         'numpy',
         'scipy',
-        'pyproj'.
+        'pyproj',
         'json',
         'os',
         'urllib',
