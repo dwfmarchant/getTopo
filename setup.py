@@ -19,14 +19,5 @@ setuptools.setup(
         'numpy',
         'scipy',
         'pyproj',
-        'json',
-        'os',
-        'urllib',
-        'http',
-        'io',
-        'zipfile',
-        'sys'
-
-        
     ],
 )
