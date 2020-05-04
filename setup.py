@@ -18,6 +18,6 @@ setuptools.setup(
     install_requires=[
         'numpy',
         'scipy',
-        'pyproj',
+        'pyproj==2.6.0',
     ],
 )
