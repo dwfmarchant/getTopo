@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="getTopo",
-    version="0.0.0",
+    version="0.1.0",
     description="Download SRTM Data",
     long_description=long_description,
     long_description_content_type="text/markdown",
